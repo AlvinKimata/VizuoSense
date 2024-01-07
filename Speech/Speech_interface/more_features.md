@@ -22,4 +22,4 @@ Integrate NLP capabilities to understand more natural language input. This allow
 10. Logging and Analytics:
 Implement logging to keep track of user interactions and identify areas for improvement. Consider integrating analytics to gather usage statistics.
 11. Documentation:
-provide clear documentation for users who want to extend or customize the functionality of the voice assistant. This can include instructions for adding new commands or modifying existing ones.aqQ||q\q1\q\\za'
+provide clear documentation for users who want to extend or customize the functionality of the voice assistant. This can include instructions for adding new commands or modifying existing ones.
