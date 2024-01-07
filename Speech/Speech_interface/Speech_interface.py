@@ -32,10 +32,9 @@ class SpeechToTextEngine:
         return stream, rec, self.p
 
     def listen_for_keywords(self, stream, rec,p):
-        recognized_text = ""
-        while not self.stop_flag.is_set():
+        keyword_detected = False
+        while not self.stop_flag.is_set() and not keyword_detected:
             data = stream.read(4000, exception_on_overflow=False)
-            #print("Raw Audio Data:", data)
             rec.AcceptWaveform(data)
             partial_result = rec.PartialResult()
             if partial_result:
@@ -45,18 +44,23 @@ class SpeechToTextEngine:
                     response = "Waking up! Listening for input..."
                     speech_output(response)
                     self.listen_keyword_detected.set()
+                    keyword_detected = True
                     return "listen"
                 elif "stop" in partial_text.lower():
                     response = "Stop listening detected. Stopping..."
                     speech_output(response)
+                    keyword_detected = True
                     return "stop"
                 elif "write only mode" in partial_text.lower():
                     response = "Write only mode detected. Switching from speech to writing mode..."
                     speech_output(response)
+                    keyword_detected = True
                     return "write only mode"
                 else:
                     response = "No keyword detected. Speak to issue an input..."
                     speech_output(response)
+                    self.stop_flag.set()
+                    keyword_detected = False
 
     def listen_for_speech_prompt(self, stream, rec,p):
         recognized_text = ""
