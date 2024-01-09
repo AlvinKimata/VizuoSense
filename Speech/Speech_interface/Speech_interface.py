@@ -3,7 +3,7 @@ import keyboard
 import json
 import subprocess
 import threading
-import time, datetime
+import datetime
 from vosk import Model, KaldiRecognizer, SetLogLevel
 from text_to_speech import speech_output as speech_output
 
@@ -34,60 +34,69 @@ class SpeechToTextEngine:
 
     def listen_for_keywords(self, stream, rec,p):
         keyword_detected = False
-        
+        response = '''Welcome to the voice commands enabled input.
+                        Available commands are:
+                        "Listen" to start listening for voice input
+                        "Stop" to stop listening for voice input
+                        "Write only mode" to switch from speech to writing mode
+                        others include:
+                        "time" to get the current time'''
+        speech_output(response)
 #        while not self.stop_flag.is_set() and not keyword_detected:
         while not keyword_detected:
             partial_text = ""
+            partial_result = ""
+            list_time = 5 #This is the time for listening for keywords
+            response = 'You can Speak to issue you voice command input.'
+            speech_output(response)
             start_time = datetime.datetime.now()
-            list_time = 5
             while True:
                 data = stream.read(4000, exception_on_overflow=False)
                 rec.AcceptWaveform(data)
                 partial_result = rec.PartialResult()
                 partial_text = json.loads(partial_result).get("partial", "")
-                print("Partial Text Received:", partial_text)
                 current_time = datetime.datetime.now()
                 elapsed_time = current_time - start_time
                 if elapsed_time.seconds > list_time:
-                    print("time out")
+                    response = 'time out.'
+                    speech_output(response)
                     break
-            if partial_text:
-#                partial_text = json.loads(partial_result).get("partial", "")
-                print("Partial Text Received:", partial_text)
-                if "listen" in partial_text.lower():
-                    response = "Waking up! Listening for input..."
-                    speech_output(response)
-                    self.listen_keyword_detected.set()
-                    keyword_detected = True
-                    return "listen"
-                elif "stop" in partial_text.lower():
-                    response = "Stop listening detected. Stopping..."
-                    speech_output(response)
-                    keyword_detected = True
-                    self.stop_flag.set()
-                    return "stop"
-                elif "write only mode" in partial_text.lower():
-                    response = "Write only mode detected. Switching from speech to writing mode..."
-                    speech_output(response)
-                    keyword_detected = True
-                    return "write only mode"
-                else:
-                    response = "No keyword detected. Speak to issue an input..."
-                    speech_output(response)
-                    keyword_detected = False
+            print("Partial Text Received:", partial_text)
+            if "listen" in partial_text.lower():
+                response = "Waking up! Listening for input..."
+                speech_output(response)
+                self.listen_keyword_detected.set()
+                keyword_detected = True
+                return "listen"
+            elif "stop" in partial_text.lower():
+                response = "Stop listening detected. Stopping..."
+                speech_output(response)
+                keyword_detected = True
+                self.stop_flag.set()
+                return "stop"
+            elif "write only mode" in partial_text.lower():
+                response = "Write only mode detected. Switching from speech to writing mode..."
+                speech_output(response)
+                keyword_detected = True
+                return "write only mode"
+            else:
+                response = "No keyword was detected."
+                speech_output(response)
+                keyword_detected = False
 
     def listen_for_speech_prompt(self, stream, rec,p):
         recognized_text = ""
+        partial_result1 = ""
         while not self.stop_flag.is_set():
             if not self.listen_keyword_detected.is_set():
                 continue
 
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
-            partial_result = rec.PartialResult()
+            partial_result1 = rec.PartialResult()
             print("Listening for speech prompt now. In the function")
-            if partial_result:
-                partial_text = json.loads(partial_result).get("partial", "")
+            if partial_result1:
+                partial_text = json.loads(partial_result1).get("partial", "")
                 recognized_text += partial_text
                 print("Partial Result:", partial_text)
 
