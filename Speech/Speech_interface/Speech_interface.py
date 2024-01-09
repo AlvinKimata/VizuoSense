@@ -79,6 +79,12 @@ class SpeechToTextEngine:
                 speech_output(response)
                 keyword_detected = True
                 return "write only mode"
+            elif "time" in partial_text.lower():
+                current_datetime = datetime.datetime.now()
+                formatted_date = current_datetime.strftime("%Y-%m-%d")
+                formatted_time = current_datetime.strftime("%I:%M %p")
+                response = f"The current date is {formatted_date} and the time is {formatted_time}"
+                speech_output(response)
             else:
                 response = "No keyword was detected."
                 speech_output(response)
