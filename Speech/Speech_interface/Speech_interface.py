@@ -3,7 +3,7 @@ import keyboard
 import json
 import subprocess
 import threading
-import time
+import time, datetime
 from vosk import Model, KaldiRecognizer, SetLogLevel
 from text_to_speech import speech_output as speech_output
 
@@ -37,16 +37,19 @@ class SpeechToTextEngine:
         
 #        while not self.stop_flag.is_set() and not keyword_detected:
         while not keyword_detected:
-            partial_text = " "
-            iterate = 0
+            partial_text = ""
+            start_time = datetime.datetime.now()
+            list_time = 5
             while True:
                 data = stream.read(4000, exception_on_overflow=False)
                 rec.AcceptWaveform(data)
                 partial_result = rec.PartialResult()
                 partial_text = json.loads(partial_result).get("partial", "")
-                iterate = iterate + 1
                 print("Partial Text Received:", partial_text)
-                if iterate == 10:
+                current_time = datetime.datetime.now()
+                elapsed_time = current_time - start_time
+                if elapsed_time.seconds > list_time:
+                    print("time out")
                     break
             if partial_text:
 #                partial_text = json.loads(partial_result).get("partial", "")
@@ -61,6 +64,7 @@ class SpeechToTextEngine:
                     response = "Stop listening detected. Stopping..."
                     speech_output(response)
                     keyword_detected = True
+                    self.stop_flag.set()
                     return "stop"
                 elif "write only mode" in partial_text.lower():
                     response = "Write only mode detected. Switching from speech to writing mode..."
@@ -70,11 +74,11 @@ class SpeechToTextEngine:
                 else:
                     response = "No keyword detected. Speak to issue an input..."
                     speech_output(response)
-                    #self.stop_flag.set()
                     keyword_detected = False
 
     def listen_for_speech_prompt(self, stream, rec,p):
         recognized_text = ""
+        print("Listening for speech prompt now")
         while not self.stop_flag.is_set():
             if not self.listen_keyword_detected.is_set():
                 continue
