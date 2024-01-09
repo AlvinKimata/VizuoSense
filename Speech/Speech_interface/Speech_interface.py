@@ -3,6 +3,7 @@ import keyboard
 import json
 import subprocess
 import threading
+import time
 from vosk import Model, KaldiRecognizer, SetLogLevel
 from text_to_speech import speech_output as speech_output
 
@@ -33,12 +34,22 @@ class SpeechToTextEngine:
 
     def listen_for_keywords(self, stream, rec,p):
         keyword_detected = False
-        while not self.stop_flag.is_set() and not keyword_detected:
-            data = stream.read(4000, exception_on_overflow=False)
-            rec.AcceptWaveform(data)
-            partial_result = rec.PartialResult()
-            if partial_result:
+        
+#        while not self.stop_flag.is_set() and not keyword_detected:
+        while not keyword_detected:
+            partial_text = " "
+            iterate = 0
+            while True:
+                data = stream.read(4000, exception_on_overflow=False)
+                rec.AcceptWaveform(data)
+                partial_result = rec.PartialResult()
                 partial_text = json.loads(partial_result).get("partial", "")
+                iterate = iterate + 1
+                print("Partial Text Received:", partial_text)
+                if iterate == 10:
+                    break
+            if partial_text:
+#                partial_text = json.loads(partial_result).get("partial", "")
                 print("Partial Text Received:", partial_text)
                 if "listen" in partial_text.lower():
                     response = "Waking up! Listening for input..."
@@ -59,7 +70,7 @@ class SpeechToTextEngine:
                 else:
                     response = "No keyword detected. Speak to issue an input..."
                     speech_output(response)
-                    self.stop_flag.set()
+                    #self.stop_flag.set()
                     keyword_detected = False
 
     def listen_for_speech_prompt(self, stream, rec,p):
