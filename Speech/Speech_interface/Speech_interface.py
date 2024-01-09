@@ -78,7 +78,6 @@ class SpeechToTextEngine:
 
     def listen_for_speech_prompt(self, stream, rec,p):
         recognized_text = ""
-        print("Listening for speech prompt now")
         while not self.stop_flag.is_set():
             if not self.listen_keyword_detected.is_set():
                 continue
@@ -86,7 +85,7 @@ class SpeechToTextEngine:
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
             partial_result = rec.PartialResult()
-
+            print("Listening for speech prompt now. In the function")
             if partial_result:
                 partial_text = json.loads(partial_result).get("partial", "")
                 recognized_text += partial_text
