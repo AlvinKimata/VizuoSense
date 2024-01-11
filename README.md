@@ -10,5 +10,5 @@ This is all that is achieved on this Codebase.
 
 This is the initial design of our goal
 
-<img src="Resources/wf.jpg" width="300">
+<img src="Resources/wf.png" width="300">
 
