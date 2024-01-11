@@ -6,7 +6,7 @@ By leveraging on computer vision, AI and ML, computer hardware and algorithms, i
 
 This is all that is achieved on this Codebase.
 
-<img src="Resources/cv1.jpg" width="300">
+<img src="Resources/cv1.webp" width="300">
 
 This is the initial design of our goal
 
