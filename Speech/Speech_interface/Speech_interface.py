@@ -16,7 +16,7 @@ class SpeechToTextEngine:
         self.stop_flag = threading.Event()
         self.p = None
         self.listen_keyword_detected = threading.Event()
-        self.keywords = {"listen": "to start listening for voice input", "stop":"to stop listening for voice input", "write only mode":"to switch from speech to writing mode","time":"to get the current time"}
+        self.keywords = {}#{"listen": "to start listening for voice input", "stop":"to stop listening for voice input", "write only mode":"to switch from speech to writing mode","time":"to get the current time"}
 
     def configure(self):
         model = Model(model_path=self.model_path, model_name=self.model_name, lang=self.lang)
@@ -56,7 +56,6 @@ class SpeechToTextEngine:
                 current_time = datetime.datetime.now()
                 elapsed_time = current_time - start_time
                 if elapsed_time.seconds > list_time:
-                    response = 'time out.'
                     speech_output(response)
                     break
                 elif any(keyword in partial_text.lower() for keyword in self.keywords.keys()):
