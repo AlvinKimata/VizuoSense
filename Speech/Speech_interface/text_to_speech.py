@@ -22,4 +22,4 @@ class text_to_speech_engine():
 def speech_output(response):
         tts_engine = text_to_speech_engine(response, 150)
         tts_engine.TTS()
-        print(response)
+        log.info(response)

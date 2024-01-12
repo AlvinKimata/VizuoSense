@@ -5,7 +5,7 @@ import subprocess
 import threading
 import datetime
 from vosk import Model, KaldiRecognizer, SetLogLevel
-from text_to_speech import speech_output as speech_output
+from text_to_speech import speech_output
 
 class SpeechToTextEngine:
     def __init__(self, model_path, model_name, lang, save_textfile_dir):
@@ -16,6 +16,7 @@ class SpeechToTextEngine:
         self.stop_flag = threading.Event()
         self.p = None
         self.listen_keyword_detected = threading.Event()
+        self.keywords = {"listen": "to start listening for voice input", "stop":"to stop listening for voice input", "write only mode":"to switch from speech to writing mode","time":"to get the current time"}
 
     def configure(self):
         model = Model(model_path=self.model_path, model_name=self.model_name, lang=self.lang)
@@ -34,13 +35,10 @@ class SpeechToTextEngine:
 
     def listen_for_keywords(self, stream, rec,p):
         keyword_detected = False
-        response = '''Welcome to the voice commands enabled input.
-                        Available commands are:
-                        "Listen" to start listening for voice input
-                        "Stop" to stop listening for voice input
-                        "Write only mode" to switch from speech to writing mode
-                        others include:
-                        "time" to get the current time'''
+        response = f'''Welcome to the voice commands enabled input.
+        Available commands are:'''
+        for key, value in self.keywords.items():
+            response += f'\n{key}: {value}'
         speech_output(response)
 #        while not self.stop_flag.is_set() and not keyword_detected:
         while not keyword_detected:
@@ -60,6 +58,8 @@ class SpeechToTextEngine:
                 if elapsed_time.seconds > list_time:
                     response = 'time out.'
                     speech_output(response)
+                    break
+                elif any(keyword in partial_text.lower() for keyword in self.keywords.keys()):
                     break
             print("Partial Text Received:", partial_text)
             if "listen" in partial_text.lower():
