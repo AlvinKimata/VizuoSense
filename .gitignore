@@ -1,8 +1,8 @@
 # VS code
 .vscode
-config.py
 # Python
 venv
 __pycache__
 .ipynb_checkpoints
 test.py
+config.py
