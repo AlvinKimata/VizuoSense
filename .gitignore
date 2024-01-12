@@ -1,6 +1,6 @@
 # VS code
 .vscode
-
+config.py
 # Python
 venv
 __pycache__
