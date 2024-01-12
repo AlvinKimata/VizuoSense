@@ -12,3 +12,5 @@ for i in range(p.get_device_count()):
     info = p.get_device_info_by_index(i)
     print(f"Device Index: {info['index']} Device Name: {info['name']}")
 ```
+
+speech interface iteration. [click to check progress](https://docs.google.com/document/d/1T8YL-tls-RnsMDFd8kNa63wOu8bF_LOCngBFNtuUmnc/edit?usp=sharing)
