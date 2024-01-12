@@ -16,7 +16,7 @@ class SpeechToTextEngine:
         self.stop_flag = threading.Event()
         self.p = None
         self.listen_keyword_detected = threading.Event()
-        self.keywords = {}#{"listen": "to start listening for voice input", "stop":"to stop listening for voice input", "write only mode":"to switch from speech to writing mode","time":"to get the current time"}
+        self.keywords = {"listen": "to start listening for voice input", "stop":"to stop listening for voice input", "write only mode":"to switch from speech to writing mode","time":"to get the current time"}
 
     def configure(self):
         model = Model(model_path=self.model_path, model_name=self.model_name, lang=self.lang)
@@ -92,7 +92,7 @@ class SpeechToTextEngine:
     def listen_for_speech_prompt(self, stream, rec,p):
         recognized_text = ""
         partial_result1 = ""
-        while not self.stop_flag.is_set():
+        while not self.stop_flag.is_set():   # Loop until the stop flag is set
             if not self.listen_keyword_detected.is_set():
                 continue
 
