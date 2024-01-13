@@ -1,11 +1,9 @@
 import pyaudio as pa
-import keyboard
 import json
-import subprocess
 import threading
-import datetime
+import keyboard
 from vosk import Model, KaldiRecognizer, SetLogLevel
-from text_to_speech import speech_output
+from IPython.display import clear_output
 
 class SpeechToTextEngine:
     def __init__(self, model_path, model_name, lang, save_textfile_dir):
@@ -33,44 +31,40 @@ class SpeechToTextEngine:
 
         return stream, rec, self.p
 
-    def listen_for_speech_prompt(self, stream, rec,p):
+    def listen_for_speech_prompt(self, stream, rec, p):
         recognized_text = ""
         while True:
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
             partial_result = rec.PartialResult()
 
-            #Prompt the user to talk
-            #Start the listening logic
+            # Prompt the user to talk
+            clear_output(wait=True)
             print("Listening for speech prompt now")
             if partial_result:
                 partial_text = json.loads(partial_result).get("partial", "")
                 recognized_text += partial_text
                 print("Partial Result:", recognized_text)
                 if keyboard.is_pressed('p'):
-                    response = ''' KeyboardInterrupt: Stopping real-time listening
-                        recognized text being: '''
-                    speech_output(response)
+                    response = f'KeyboardInterrupt: Stopping real-time listening\nRecognized text being: {recognized_text}'
+                    clear_output(wait=True)
+                    print(response)
                     self.stop_flag.set()
                     return recognized_text
-            #define logic ya kuambia the recognizer that tumemaliza to speek
-
-            #take recognized text to the preprocessor
-
-            #Take sentence from the preprocesssor to the Gemini pro tiny
-
-            #Take output from Gemini to TTS
-
-            #Prompt for more text input and continue in the loop
+            # Define logic ya kuambia the recognizer that tumemaliza to speek
+            # Take recognized text to the preprocessor
+            # Take sentence from the preprocessor to the Gemini pro tiny
+            # Take output from Gemini to TTS
+            # Prompt for more text input and continue in the loop
 
     def real_time_listen(self):
-        stream, rec,p = self.configure()
+        stream, rec, p = self.configure()
 
         try:
-            self.listen_for_speech_prompt(stream, rec,p)
+            self.listen_for_speech_prompt(stream, rec, p)
         except KeyboardInterrupt:
             response = "KeyboardInterrupt: Stopping real-time listening"
-            speech_output(response)
+            print(response)
 
         finally:
             stream.stop_stream()
