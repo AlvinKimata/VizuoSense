@@ -32,25 +32,25 @@ class SpeechToTextEngine:
         return stream, rec, self.p
 
     def listen_for_speech_prompt(self, stream, rec, p):
+        partial_text1 = ""
         recognized_text = ""
         while True:
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
             partial_result = rec.PartialResult()
-
             # Prompt the user to talk
             clear_output(wait=True)
             print("Listening for speech prompt now")
             if partial_result:
                 partial_text = json.loads(partial_result).get("partial", "")
-                recognized_text += partial_text
+                recognized_text +=  partial_text.replace(partial_text1, "")
                 print("Partial Result:", recognized_text)
                 if keyboard.is_pressed('p'):
                     response = f'KeyboardInterrupt: Stopping real-time listening\nRecognized text being: {recognized_text}'
                     clear_output(wait=True)
                     print(response)
                     self.stop_flag.set()
-                    return recognized_text
+            partial_text1 = partial_text
             # Define logic ya kuambia the recognizer that tumemaliza to speek
             # Take recognized text to the preprocessor
             # Take sentence from the preprocessor to the Gemini pro tiny
