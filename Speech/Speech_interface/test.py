@@ -52,11 +52,16 @@ class SpeechToTextEngine:
                     self.stop_flag.set()
             partial_text1 = partial_text
             # Define logic ya kuambia the recognizer that tumemaliza to speek
+
             # Take recognized text to the preprocessor
+
             # Take sentence from the preprocessor to the Gemini pro tiny
+
             # Take output from Gemini to TTS
+
             # Prompt for more text input and continue in the loop
 
+            
     def real_time_listen(self):
         stream, rec, p = self.configure()
 
