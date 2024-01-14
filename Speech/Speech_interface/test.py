@@ -1,6 +1,7 @@
 import pyaudio as pa
 import json
 import threading
+import datetime
 import keyboard
 from vosk import Model, KaldiRecognizer, SetLogLevel
 from IPython.display import clear_output
@@ -34,6 +35,12 @@ class SpeechToTextEngine:
     def listen_for_speech_prompt(self, stream, rec, p):
         partial_text1 = ""
         recognized_text = ""
+        timeout_threshold = 5
+        in_silence = False
+
+        # Initialize timeout_start before the loop
+        timeout_start = datetime.datetime.now()
+
         while True:
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
@@ -43,8 +50,18 @@ class SpeechToTextEngine:
             print("Listening for speech prompt now")
             if partial_result:
                 partial_text = json.loads(partial_result).get("partial", "")
-                recognized_text +=  partial_text.replace(partial_text1, "")
+                recognized_text += partial_text.replace(partial_text1, "")
                 print("Partial Result:", recognized_text)
+                
+                if "   " in recognized_text and not in_silence:
+                    in_silence = True
+
+                current_time = datetime.datetime.now()
+                elapsed_time = current_time - timeout_start
+                if elapsed_time.seconds > timeout_threshold:
+                    print("You stopped talking, your recognized text is: ", recognized_text)
+                    in_silence = False
+                    timeout_start = datetime.datetime.now()
                 if keyboard.is_pressed('p'):
                     response = f'KeyboardInterrupt: Stopping real-time listening\nRecognized text being: {recognized_text}'
                     clear_output(wait=True)
