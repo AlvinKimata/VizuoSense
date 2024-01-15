@@ -102,12 +102,13 @@ class SpeechToTextEngine:
         in_silence = False
         # Initialize timeout_start before the loop
         timeout_start = datetime.datetime.now()
-        while True:
+        while not self.stop_flag.is_set():   # Loop until the stop flag is set
+            if not self.listen_keyword_detected.is_set():
+                continue
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
             partial_result = rec.PartialResult()
             # Prompt the user to talk
-            clear_output(wait=True)
             if partial_result:
                 #print("Start status of in silence:",in_silence)
                 partial_text = json.loads(partial_result).get("partial", "")
