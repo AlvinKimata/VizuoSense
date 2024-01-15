@@ -30,39 +30,48 @@ class SpeechToTextEngine:
         rec = KaldiRecognizer(model, 16000)
         rec.SetWords(True)
         rec.SetPartialWords(True)
-
         return stream, rec, self.p
-
     def listen_for_speech_prompt(self, stream, rec, p):
         partial_text1 = ""
         recognized_text = ""
+        recognized_text1 = ""
         current_prompt = ""
         in_silence = False
-
         # Initialize timeout_start before the loop
         timeout_start = datetime.datetime.now()
-
         while True:
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
             partial_result = rec.PartialResult()
             # Prompt the user to talk
             clear_output(wait=True)
-            print("Listening for speech prompt now")
             if partial_result:
+                #print("Start status of in silence:",in_silence)
                 partial_text = json.loads(partial_result).get("partial", "")
+                received_txt = partial_text.replace(partial_text1, "")
+                #print(f"Start:{received_txt}:end")
                 recognized_text += partial_text.replace(partial_text1, "")
+                current_prompt = recognized_text.replace(recognized_text1,"")
                 print("Partial Result:", recognized_text)
-                
-                if "   " in recognized_text and not in_silence:
+                #if "   " in current_prompt and not in_silence:
+                if received_txt == "" and in_silence == False:
+                    timeout_start = datetime.datetime.now()
+#                    print("in silence set to true, datetime is:", timeout_start)
                     in_silence = True
-
+                elif received_txt != "":
+                    in_silence = False
+                #print("After if statement for checking is text is empty. insilence status: ",in_silence)
                 current_time = datetime.datetime.now()
                 elapsed_time = current_time - timeout_start
-                if elapsed_time.seconds > self.listening_timeout_threshold:
-                    print("You stopped talking, your recognized text is: ", recognized_text)
-                    in_silence = False
+                if elapsed_time.seconds > self.listening_timeout_threshold and in_silence == True:
+                    print("YOU STOPPED TALKING, THE WHOLE RECOGNIZED TEXT: ", recognized_text)
+                    print("YOU STOPPED TALKING, THE CURRENT PROMPT TEXT: ", current_prompt)
                     timeout_start = datetime.datetime.now()
+                    current_prompt = ""
+                    recognized_text1 = recognized_text
+                    in_silence = False
+                    
+                    print("Listening for speech prompt now")
                 if keyboard.is_pressed('p'):
                     response = f'KeyboardInterrupt: Stopping real-time listening\nRecognized text being: {recognized_text}'
                     clear_output(wait=True)
