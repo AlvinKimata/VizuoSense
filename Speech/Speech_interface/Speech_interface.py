@@ -17,6 +17,7 @@ class SpeechToTextEngine:
         self.p = None
         self.listen_keyword_detected = threading.Event()
         self.keywords = {"listen": "to start listening for voice input", "stop":"to stop listening for voice input", "write only mode":"to switch from speech to writing mode","time":"to get the current time"}
+        self.listening_timeout_threshold = 5
 
     def configure(self):
         model = Model(model_path=self.model_path, model_name=self.model_name, lang=self.lang)
@@ -93,32 +94,61 @@ class SpeechToTextEngine:
                 keyword_detected = False
             partial_text1 = partial_text
 
-    def listen_for_speech_prompt(self, stream, rec,p):
+    def listen_for_speech_prompt(self, stream, rec, p):
+        partial_text1 = ""
         recognized_text = ""
-        partial_result1 = ""
-        while not self.stop_flag.is_set():   # Loop until the stop flag is set
-            if not self.listen_keyword_detected.is_set():
-                continue
-
+        recognized_text1 = ""
+        current_prompt = ""
+        in_silence = False
+        # Initialize timeout_start before the loop
+        timeout_start = datetime.datetime.now()
+        while True:
             data = stream.read(4000, exception_on_overflow=False)
             rec.AcceptWaveform(data)
-            partial_result1 = rec.PartialResult()
-            print("Listening for speech prompt now. In the function")
-            if partial_result1:
-                partial_text = json.loads(partial_result1).get("partial", "")
-                recognized_text += partial_text
-                print("Partial Result:", partial_text)
-
-                if "open browser" in partial_text.lower():
-                    response = "Opening the browser..."
-                    speech_output(response)
-                    subprocess.run(["start", "https://www.google.com"])
+            partial_result = rec.PartialResult()
+            # Prompt the user to talk
+            clear_output(wait=True)
+            if partial_result:
+                #print("Start status of in silence:",in_silence)
+                partial_text = json.loads(partial_result).get("partial", "")
+                received_txt = partial_text.replace(partial_text1, "")
+                #print(f"Start:{received_txt}:end")
+                recognized_text += partial_text.replace(partial_text1, "")
+                current_prompt = recognized_text.replace(recognized_text1,"")
+                print("Partial Result:", recognized_text)
+                #if "   " in current_prompt and not in_silence:
+                #Determine when a speaker is done communicating
+                if received_txt == "" and in_silence == False:
+                    timeout_start = datetime.datetime.now()
+#                    print("in silence set to true, datetime is:", timeout_start)
+                    in_silence = True
+                elif received_txt != "":
+                    in_silence = False
+                #print("After if statement for checking is text is empty. insilence status: ",in_silence)
+                current_time = datetime.datetime.now()
+                elapsed_time = current_time - timeout_start
+                if elapsed_time.seconds > self.listening_timeout_threshold and in_silence == True:
+                    print("YOU STOPPED TALKING, THE WHOLE RECOGNIZED TEXT: ", recognized_text)
+                    print("YOU STOPPED TALKING, THE CURRENT PROMPT TEXT: ", current_prompt)
+                    timeout_start = datetime.datetime.now()
+                    current_prompt = ""
+                    recognized_text1 = recognized_text
+                    in_silence = False
+                    
+                    print("Listening for speech prompt now")
                 if keyboard.is_pressed('p'):
-                    response = ''' KeyboardInterrupt: Stopping real-time listening
-                        recognized text being: '''
-                    speech_output(response)
+                    response = f'KeyboardInterrupt: Stopping real-time listening\nRecognized text being: {recognized_text}'
+                    clear_output(wait=True)
+                    print(response)
                     self.stop_flag.set()
-                    return recognized_text
+            partial_text1 = partial_text
+            # Take recognized text to the preprocessor
+
+            # Take sentence from the preprocessor to the Gemini pro tiny
+
+            # Take output from Gemini to TTS
+
+            # Prompt for more text input and continue in the loop
 
     def real_time_listen(self):
         stream, rec,p = self.configure()
