@@ -16,6 +16,7 @@ class SpeechToTextEngine:
         self.p = None
         self.listen_keyword_detected = threading.Event()
         self.keywords = {"listen": "to start listening for voice input", "stop":"to stop listening for voice input", "write only mode":"to switch from speech to writing mode","time":"to get the current time"}
+        self.listening_timeout_threshold = 5
 
     def configure(self):
         model = Model(model_path=self.model_path, model_name=self.model_name, lang=self.lang)
@@ -35,7 +36,7 @@ class SpeechToTextEngine:
     def listen_for_speech_prompt(self, stream, rec, p):
         partial_text1 = ""
         recognized_text = ""
-        timeout_threshold = 5
+        current_prompt = ""
         in_silence = False
 
         # Initialize timeout_start before the loop
@@ -58,7 +59,7 @@ class SpeechToTextEngine:
 
                 current_time = datetime.datetime.now()
                 elapsed_time = current_time - timeout_start
-                if elapsed_time.seconds > timeout_threshold:
+                if elapsed_time.seconds > self.listening_timeout_threshold:
                     print("You stopped talking, your recognized text is: ", recognized_text)
                     in_silence = False
                     timeout_start = datetime.datetime.now()
