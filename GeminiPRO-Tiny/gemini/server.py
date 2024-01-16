@@ -6,7 +6,7 @@ import pyttsx3
 import gradio as gr
 
 # Used to securely store your API key
-genai.configure(api_key='AIzaSyD33OPdNZ4XQlmj1eQPPndA3_LLKafdsBA')
+genai.configure(api_key='')
 
 class TextToSpeechEngine:
     def __init__(self, rate):
