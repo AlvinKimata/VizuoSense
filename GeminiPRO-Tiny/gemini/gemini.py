@@ -3,9 +3,8 @@ import time
 import google.generativeai as genai
 import pyttsx3
 import logging as log
-from config import GOOGLE_API_KEY
 
-genai.configure(api_key=GOOGLE_API_KEY)
+genai.configure(api_key='AIzaSyD33OPdNZ4XQlmj1eQPPndA3_LLKafdsBA')
 
 class TextToSpeechEngine:
     def __init__(self, rate):
@@ -25,7 +24,7 @@ class BlindAssistanceSystem:
         self.tts_engine = tts_engine
         self.prompt_interval = prompt_interval
         self.blind_assistance_prompt = (
-            "you are a sarcastic Navigation assistant for a visual impaired person. What is the optimal way forward the person should take to avoid collision, only state the object you see if it is in the way of the person."
+            "you are a Navigation assistant for a visual impaired person. What is the optimal way forward the person should take to avoid collision, only state the object you see if it is in the way of the person."
         )
 
     def capture_and_generate(self):
