@@ -82,7 +82,7 @@ if __name__ == "__main__":
         with gr.Row("Model output"):
             text_input = gr.TextArea(label = "Model output")
 
-    app.launch(share = False)
+    app.launch(share = True)
 
 
     # gr_interface(model, tts_engine)
