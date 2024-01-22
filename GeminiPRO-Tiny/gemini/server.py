@@ -1,88 +1,85 @@
-import cv2
-import time
-import numpy as np
-import google.generativeai as genai
-import pyttsx3
+import os
 import gradio as gr
+import cv2
+import google.generativeai as genai
 
-# Used to securely store your API key
-genai.configure(api_key='')
 
-class TextToSpeechEngine:
-    def __init__(self, rate):
-        self.rate = rate
-        self.engine = pyttsx3.init()
+genai.configure(api_key='AIzaSyAtGqtsQ1zItev6Ur2NVMl0Jup8UN-_sTY')
 
-    def tts(self, text):
-        self.engine.setProperty('rate', self.rate)
-        self.engine.say(text)
-        self.engine.runAndWait()
+# Initialize the Gemini Multimodal model
+model = genai.GenerativeModel('gemini-pro-vision')
 
-class BlindAssistanceSystem:
-    def __init__(self, model, tts_engine, user_prompt):
-        self.model = model
-        self.user_prompt = user_prompt
-        self.tts_engine = tts_engine
-        self.blind_assistance_prompt = (
-            "You are a navigation asistant. Describe the surroundings briefly and suggest the optimal way forward for a visually impaired person."
+# Function to process image and prompt
+def process_input(image, prompt, chatbot, txt):
+    try:
+        # Convert the image to bytes
+        image_bytes = cv2.imencode('.jpg', image)[1].tobytes()
+
+        # Make a direct call to the Gemini Multimodal model
+        response = model.generate_content(contents=[prompt, {'mime_type': 'image/jpeg', 'data': image_bytes}])
+
+        # Extract generated text if response is successful
+        if response.success:
+            generated_text = response.text
+            print(f"Generated Text: {generated_text}")
+
+            # Add the multimodal output to the chat
+            history = chatbot.history + [(generated_text, None)]
+            chatbot.history = history
+
+            # Clear the text input
+            txt.value = ""
+
+        # Yield both chatbot.history and txt
+        yield chatbot.history, txt
+
+    except Exception as e:
+        print(f"Error in process_input: {e}")
+
+        # Yield only chatbot.history and an empty txt
+        yield chatbot.history, gr.Textbox(value="", interactive=False)
+
+# Function to handle text input
+def add_text(history, text):
+    history = history + [(text, None)]
+    return history, gr.Textbox(value="", interactive=False)
+
+# Function to handle file upload
+def add_file(history, file):
+    history = history + [((file.name,), None)]
+    return history
+
+# Create the Gradio interface
+with gr.Blocks() as demo:
+    chatbot = gr.Chatbot(
+        [],
+        elem_id="chatbot",
+        bubble_full_width=False,
+        avatar_images=(None, (os.path.join(os.path.dirname(__file__), "avatar.png"))),
+    )
+
+    with gr.Row():
+        txt = gr.Textbox(
+            scale=4,
+            show_label=False,
+            placeholder="Enter text and press enter, or upload an image",
+            container=False,
         )
+        btn = gr.UploadButton("📁", file_types=["image", "video", "audio"])
 
-        self.prompt = self.blind_assistance_prompt + self.user_prompt
+    # Handle text input and chat responses
+    txt_msg = txt.submit(lambda x: add_text(x, chatbot, txt), [chatbot, txt], queue=False).then(
+        lambda x: x, None, [chatbot, txt], queue=False
+    )
 
-    def generate_text_and_tts(self, image):
-        frame = np.array(image)
-        response = self.model.generate_content(
-            contents=[self.prompt, {'mime_type': 'image/jpeg', 'data': cv2.imencode('.jpg', frame)[1].tobytes()}]
-        )
-        generated_text = response.text
-        print(f"Generated Text: {generated_text}")
-
-        # Text-to-Speech
-        self.tts_engine.tts(generated_text)
-
-    def send_message():
-        pass
-        # #Append a new prompt to the chat history.
-        # response = chat.send_message("In one sentence, explain how a computer works to a young child.")
-        # to_markdown(response.text)
-
-def gr_interface(model, tts_engine, text_input):
-    blind_system = BlindAssistanceSystem(model, tts_engine, text_input)
-    pass
+# Handle file upload, make direct call to Gemini Multimodal, and update chat
+    file_msg = btn.upload(lambda x: process_input(x, 'your_prompt', chatbot, txt), [chatbot, btn], [chatbot, txt], queue=False).then(
+        lambda x: x, None, [chatbot, txt], queue=False
+    )
 
 
- 
+demo.queue()
 
-    # iface = gr.Interface(
-    #     fn=blind_system.generate_text_and_tts,
-    #     inputs="image",
-    #     outputs=None,
-    #     live=True,
-    # )
-
-    # iface.launch(share=True)
-
+# Launch the Gradio interface
 if __name__ == "__main__":
-    model = genai.GenerativeModel('gemini-pro-vision')
-    chat = model.start_chat(history=[])
-    print(f"Chat is: {chat}")
-    tts_engine = TextToSpeechEngine(rate=150)
-
-    with gr.Blocks() as app:
-        gr.Markdown("Gemini multimodal assistant \n")
-
-        #Row for text input.
-        with gr.Row():
-            text_input = gr.TextArea(label = 'text input')
-            image_input = gr.Image(label = "Drop image here")
-        
-        text_button = gr.Button("Submit")
-        text_button.click() #Perform text input pipeline.
-
-        with gr.Row("Model output"):
-            text_input = gr.TextArea(label = "Model output")
-
-    app.launch(share = False)
-
-
-    # gr_interface(model, tts_engine)
+    demo.launch(share=True)
