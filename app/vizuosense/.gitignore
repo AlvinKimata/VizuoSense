@@ -1,16 +1,3 @@
-# VS code
-.vscode
-# Python
-.venv
-__pycache__
-.ipynb_checkpoints
-test.py
-config.py
-test1.py
-test2.py
-
-
-
 # Miscellaneous
 *.class
 *.log
