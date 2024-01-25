@@ -35,7 +35,7 @@ dependencies:
   camera: ^0.10.0
   http: ^0.13.3
   speech_to_text: ^6.0.0
-  flutter_tts: ^3.2.0
+#  flutter_tts: ^3.8.5
 
 
   # The following adds the Cupertino Icons font to your application.
