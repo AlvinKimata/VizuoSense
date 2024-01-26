@@ -1,86 +1,33 @@
-import gradio as gr
 import google.generativeai as genai
-import pyttsx3
-import gradio as gr
-
-# Used to securely store your API key
-genai.configure(api_key='')
-
-class TextToSpeechEngine:
-    def __init__(self, rate):
-        self.rate = rate
-        self.engine = pyttsx3.init()
-
-    def tts(self, text):
-        self.engine.setProperty('rate', self.rate)
-        self.engine.say(text)
-        self.engine.runAndWait()
-
-class BlindAssistanceSystem:
-    def __init__(self, model, tts_engine, user_prompt):
-        self.model = model
-        self.user_prompt = user_prompt
-        self.tts_engine = tts_engine
-        self.blind_assistance_prompt = (
-            "You are a navigation asistant. Describe the surroundings briefly and suggest the optimal way forward for a visually impaired person."
-        )
-
-        self.prompt = self.blind_assistance_prompt + self.user_prompt
-
-    def generate_text_and_tts(self, image):
-        frame = np.array(image)
-        response = self.model.generate_content(
-            contents=[self.prompt, {'mime_type': 'image/jpeg', 'data': cv2.imencode('.jpg', frame)[1].tobytes()}]
-        )
-        generated_text = response.text
-        print(f"Generated Text: {generated_text}")
-
-        # Text-to-Speech
-        self.tts_engine.tts(generated_text)
-
-    def send_message():
-        pass
-        # #Append a new prompt to the chat history.
-        # response = chat.send_message("In one sentence, explain how a computer works to a young child.")
-        # to_markdown(response.text)
-
-def gr_interface(model, tts_engine, text_input):
-    blind_system = BlindAssistanceSystem(model, tts_engine, text_input)
-    pass
+from PIL import Image
+import io
 
 
- 
+genai.configure(api_key='AIzaSyC6NSrRHycXap4eOSS2exAAnYlYojh_Prg')
 
-    # iface = gr.Interface(
-    #     fn=blind_system.generate_text_and_tts,
-    #     inputs="image",
-    #     outputs=None,
-    #     live=True,
-    # )
+model = genai.GenerativeModel('gemini-pro-vision')
 
-    # iface.launch(share=True)
+def answer_question(image, question):
+    yield "Encoding image..."
 
-if __name__ == "__main__":
-    model = genai.GenerativeModel('gemini-pro-vision')
-    chat = model.start_chat(history=[])
-    print(f"Chat is: {chat}")
-    tts_engine = TextToSpeechEngine(rate=150)
+    image_bytes = io.BytesIO()
+    image.save(image_bytes, format='JPEG')
+    image_bytes = image_bytes.getvalue()
 
-    with gr.Blocks() as app:
-        gr.Markdown("Gemini multimodal assistant \n")
+    response = model.generate_content(contents=[question, {'mime_type': 'image/jpeg', 'data': image_bytes}])
 
-        #Row for text input.
-        with gr.Row():
-            text_input = gr.TextArea(label = 'text input')
-            image_input = gr.Image(label = "Drop image here")
-        
-        text_button = gr.Button("Submit")
-        text_button.click() #Perform text input pipeline.
+    generated_text = response.text
+    yield generated_text
 
-        with gr.Row("Model output"):
-            text_input = gr.TextArea(label = "Model output")
-
-    app.launch(share = False)
-
-
-    # gr_interface(model, tts_engine)
+gr.Interface(
+    title="🕶️ VizuoSense",
+    description="""
+    This is a repository 
+    for the Intelligent Camera for the visually impaired project preferably refer to as VizuoSense.©
+    """,
+    fn=answer_question,
+    inputs=[gr.Image(type="pil"), gr.Textbox(lines=2, label="Question")],
+    outputs=gr.TextArea(label="Answer"),
+    allow_flagging="never",
+    cache_examples=False,
+).launch()
