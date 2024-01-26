@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'VizuoSense'),
     );
   }
 }
@@ -31,51 +31,118 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String prompt = ''; // Variable to store the text prompt
+  TextEditingController _textEditingController = TextEditingController();
+  List<Widget> chatMessages = []; // List to store chat messages
+  String imageUrl = ''; // Variable to store the uploaded image URL
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              // Handle settings button press
+            },
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Welcome to your app!',
-              style: TextStyle(fontSize: 20),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              reverse: true,
+              children: chatMessages,
             ),
-            const SizedBox(height: 20),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  prompt =
-                      value; // Update the 'prompt' variable when text changes
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Enter prompt',
-                border: OutlineInputBorder(),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildImageInput(),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    // Handle sending message
+                    String message = _textEditingController.text;
+                    if (message.isNotEmpty || imageUrl.isNotEmpty) {
+                      // Add the user's message to the chat list
+                      setState(() {
+                        _textEditingController.clear();
+                        _addImageMessage(); // Add image message
+                        _addChatMessage(message, isUser: true);
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Stored Prompt: $prompt', // Display the stored prompt
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Access the 'prompt' variable here if needed
-          print('Prompt: $prompt');
-        },
-        tooltip: 'Button',
-        child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
+  }
+
+  // Helper method to build the image input UI
+  Widget _buildImageInput() {
+    return Column(
+      children: [
+        imageUrl.isEmpty
+            ? GestureDetector(
+                onTap: () {
+                  // Handle image upload here
+                  _addImageMessage(); // For demo, consider this as image upload
+                },
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(Icons.image, size: 50, color: Colors.grey),
+                      SizedBox(height: 8.0),
+                      Text(
+                        'Upload an image',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : Image.network(imageUrl),
+        const SizedBox(height: 8.0),
+        TextField(
+          controller: _textEditingController,
+          enabled: imageUrl.isNotEmpty, // Enable only if image is uploaded
+          decoration: InputDecoration(
+            hintText: 'Type your message...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Helper method to add an image message to the list
+  void _addImageMessage() {
+    // ... (previous image message logic remains the same)
+
+    // Update the UI to enable the "Send" button
+    setState(() {
+      imageUrl =
+          'https://example.com/sample-image.jpg'; // Replace with actual image URL
+    });
+  }
+
+  // Helper method to add a chat message to the list
+  void _addChatMessage(String message, {bool isUser = false}) {
+    // ... (previous method content remains the same)
   }
 }
