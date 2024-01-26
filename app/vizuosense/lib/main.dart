@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Container(
                   padding: EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Color.fromARGB(255, 247, 247, 247),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Column(
