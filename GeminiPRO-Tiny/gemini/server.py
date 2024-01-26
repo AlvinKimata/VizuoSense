@@ -1,6 +1,4 @@
-import cv2
-import time
-import numpy as np
+import gradio as gr
 import google.generativeai as genai
 import pyttsx3
 import gradio as gr
@@ -82,7 +80,7 @@ if __name__ == "__main__":
         with gr.Row("Model output"):
             text_input = gr.TextArea(label = "Model output")
 
-    app.launch(share = True)
+    app.launch(share = False)
 
 
     # gr_interface(model, tts_engine)
