@@ -1,1 +1,0 @@
- /mnt/c/Users/Admin/geminiapp/.dart_tool/flutter_build/0411b1b01a48e44e03f0cb71e03e1e28/native_assets.yaml: 
