@@ -1,0 +1,12 @@
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/geminiapp
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/icudtl.dat
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.json
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/FontManifest.json
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/fonts/MaterialIcons-Regular.otf
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES.Z
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/shaders/ink_sparkle.frag
+/mnt/c/Users/Admin/geminiapp/build/linux/x64/debug/bundle/data/flutter_assets/version.json
