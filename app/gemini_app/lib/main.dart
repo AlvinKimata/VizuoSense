@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-
-//import '/custom_code/actions/index.dart' as actions;
-import 'start_model.dart';
-export 'start_model.dart';
 
 class StartWidget extends StatefulWidget {
   const StartWidget({Key? key}) : super(key: key);
@@ -15,25 +10,24 @@ class StartWidget extends StatefulWidget {
 }
 
 class _StartWidgetState extends State<StartWidget> {
-  late StartModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  late TextEditingController _textController;
+  late FocusNode _textFieldFocusNode;
+  late FocusNode _unfocusNode;
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => StartModel());
-
-    _model.textController ??= TextEditingController();
-    _model.textFieldFocusNode ??= FocusNode();
-
+    _textController = TextEditingController();
+    _textFieldFocusNode = FocusNode();
+    _unfocusNode = FocusNode();
     WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    _model.dispose();
-
+    _textController.dispose();
+    _textFieldFocusNode.dispose();
+    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -49,11 +43,10 @@ class _StartWidgetState extends State<StartWidget> {
     }
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+      onTap: () => _unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-        key: scaffoldKey,
         backgroundColor: Theme.of(context).primaryColor,
         body: SafeArea(
           top: true,
@@ -87,7 +80,7 @@ class _StartWidgetState extends State<StartWidget> {
                                     EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    //await actions.startcamera();
+                                    // Your action for camera start
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Theme.of(context).primaryColor,
@@ -96,7 +89,8 @@ class _StartWidgetState extends State<StartWidget> {
                                   ),
                                   child: FaIcon(
                                     FontAwesomeIcons.camera,
-                                    color: Theme.of(context).accentColor,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
                                 ),
                               ),
@@ -105,7 +99,7 @@ class _StartWidgetState extends State<StartWidget> {
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 30, 0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    // await actions.startcamera();
+                                    // Your action for camera stop
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Theme.of(context).primaryColor,
@@ -184,8 +178,8 @@ class _StartWidgetState extends State<StartWidget> {
                     child: Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(8, 0, 16, 0),
                       child: TextFormField(
-                        controller: _model.textController,
-                        focusNode: _model.textFieldFocusNode,
+                        controller: _textController,
+                        focusNode: _textFieldFocusNode,
                         autofocus: true,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -195,7 +189,7 @@ class _StartWidgetState extends State<StartWidget> {
                           hintStyle: Theme.of(context).textTheme.subtitle1,
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).colorScheme.secondary,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(8),
@@ -224,8 +218,9 @@ class _StartWidgetState extends State<StartWidget> {
                         ),
                         style: Theme.of(context).textTheme.bodyText1,
                         maxLines: 2,
-                        validator:
-                            _model.textControllerValidator.asValidator(context),
+                        validator: (value) {
+                          // Your validation logic here
+                        },
                       ),
                     ),
                   ),
