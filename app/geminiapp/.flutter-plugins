@@ -1,0 +1,25 @@
+# This is a generated file; do not edit or check into version control.
+camera=/home/mars_rover/.pub-cache/hosted/pub.dev/camera-0.10.5+9/
+camera_android=/home/mars_rover/.pub-cache/hosted/pub.dev/camera_android-0.10.8+16/
+camera_avfoundation=/home/mars_rover/.pub-cache/hosted/pub.dev/camera_avfoundation-0.9.14/
+camera_web=/home/mars_rover/.pub-cache/hosted/pub.dev/camera_web-0.3.2+4/
+flutter_plugin_android_lifecycle=/home/mars_rover/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/
+path_provider=/home/mars_rover/.pub-cache/hosted/pub.dev/path_provider-2.0.14/
+path_provider_android=/home/mars_rover/.pub-cache/hosted/pub.dev/path_provider_android-2.0.25/
+path_provider_foundation=/home/mars_rover/.pub-cache/hosted/pub.dev/path_provider_foundation-2.2.2/
+path_provider_linux=/home/mars_rover/.pub-cache/hosted/pub.dev/path_provider_linux-2.1.11/
+path_provider_windows=/home/mars_rover/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.7/
+shared_preferences=/home/mars_rover/.pub-cache/hosted/pub.dev/shared_preferences-2.2.2/
+shared_preferences_android=/home/mars_rover/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.1/
+shared_preferences_foundation=/home/mars_rover/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.3.4/
+shared_preferences_linux=/home/mars_rover/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.3.2/
+shared_preferences_web=/home/mars_rover/.pub-cache/hosted/pub.dev/shared_preferences_web-2.2.1/
+shared_preferences_windows=/home/mars_rover/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.3.2/
+sqflite=/home/mars_rover/.pub-cache/hosted/pub.dev/sqflite-2.2.6/
+url_launcher=/home/mars_rover/.pub-cache/hosted/pub.dev/url_launcher-6.1.10/
+url_launcher_android=/home/mars_rover/.pub-cache/hosted/pub.dev/url_launcher_android-6.0.27/
+url_launcher_ios=/home/mars_rover/.pub-cache/hosted/pub.dev/url_launcher_ios-6.1.4/
+url_launcher_linux=/home/mars_rover/.pub-cache/hosted/pub.dev/url_launcher_linux-3.0.6/
+url_launcher_macos=/home/mars_rover/.pub-cache/hosted/pub.dev/url_launcher_macos-3.0.7/
+url_launcher_web=/home/mars_rover/.pub-cache/hosted/pub.dev/url_launcher_web-2.1.0/
+url_launcher_windows=/home/mars_rover/.pub-cache/hosted/pub.dev/url_launcher_windows-3.0.8/
