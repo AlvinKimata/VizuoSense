@@ -33,150 +33,110 @@ class _StartWidgetState extends State<StartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarBrightness: Theme.of(context).brightness,
-          systemStatusBarContrastEnforced: true,
-        ),
-      );
-    }
-
     return GestureDetector(
       onTap: () => _unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_unfocusNode)
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
+              Container(
+                width: double.infinity,
+                height: 199,
+                color: Colors.blue, // Replace with your primary color
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: double.infinity,
-                          height: 199,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
+                        ElevatedButton(
+                          onPressed: () async {
+                            // Your action for camera start
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary:
+                                Colors.blue, // Replace with your primary color
+                            padding: EdgeInsets.zero,
+                            elevation: 0,
+                          ),
+                          child: FaIcon(
+                            FontAwesomeIcons.camera,
+                            color: Colors
+                                .white, // Replace with your secondary color
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    // Your action for camera start
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Theme.of(context).primaryColor,
-                                    padding: EdgeInsets.zero,
-                                    elevation: 0,
-                                  ),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.camera,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 0, 30, 0),
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    // Your action for camera stop
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Theme.of(context).primaryColor,
-                                    padding: EdgeInsets.zero,
-                                    elevation: 0,
-                                  ),
-                                  child: Icon(
-                                    Icons.stop_circle,
-                                    color: Theme.of(context).errorColor,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        ElevatedButton(
+                          onPressed: () async {
+                            // Your action for camera stop
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary:
+                                Colors.blue, // Replace with your primary color
+                            padding: EdgeInsets.zero,
+                            elevation: 0,
+                          ),
+                          child: Icon(
+                            Icons.stop_circle,
+                            color: Colors.red, // Replace with your error color
+                            size: 15,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Container(
-                    height: 387,
-                    child: Stack(
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Container(
-                              width: 400,
-                              height: 321,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).backgroundColor,
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    25, 25, 25, 0),
-                                child: Text(
-                                  'model Text output... ',
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  print('Button pressed ...');
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Theme.of(context).primaryColor,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24, 0, 24, 0),
-                                  elevation: 3,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(
-                                  'play',
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(8, 0, 16, 0),
+              Expanded(
+                child: Container(
+                  color: Colors.grey[200], // Replace with your background color
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 400,
+                        height: 200,
+                        color:
+                            Colors.white, // Replace with your background color
+                        child: Padding(
+                          padding: EdgeInsets.all(25),
+                          child: Text(
+                            'Model Text Output...',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          print('Button pressed ...');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary:
+                              Colors.blue, // Replace with your primary color
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'Play',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(
                       child: TextFormField(
                         controller: _textController,
                         focusNode: _textFieldFocusNode,
@@ -184,61 +144,46 @@ class _StartWidgetState extends State<StartWidget> {
                         obscureText: false,
                         decoration: InputDecoration(
                           labelText: 'Enter Prompt',
-                          labelStyle: Theme.of(context).textTheme.subtitle1,
-                          hintText: 'prompt...',
-                          hintStyle: Theme.of(context).textTheme.subtitle1,
+                          hintText: 'Prompt...',
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
+                              color: Colors
+                                  .blue, // Replace with your secondary color
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).errorColor,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).errorColor,
+                              color: Colors
+                                  .blue, // Replace with your primary color
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: TextStyle(fontSize: 16),
                         maxLines: 2,
                         validator: (value) {
                           // Your validation logic here
                         },
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 5, 0),
-                    child: IconButton(
-                      color:
-                          Theme.of(context).primaryTextTheme.bodyText1!.color,
-                      icon: Icon(
-                        Icons.send_outlined,
-                        size: 24,
+                    Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: IconButton(
+                        color: Colors.blue, // Replace with your primary color
+                        icon: Icon(
+                          Icons.send_outlined,
+                          size: 24,
+                        ),
+                        onPressed: () {
+                          print('IconButton pressed ...');
+                        },
                       ),
-                      onPressed: () {
-                        print('IconButton pressed ...');
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -246,4 +191,10 @@ class _StartWidgetState extends State<StartWidget> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: StartWidget(),
+  ));
 }
