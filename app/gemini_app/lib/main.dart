@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class StartWidget extends StatefulWidget {
@@ -57,6 +60,13 @@ class _StartWidgetState extends State<StartWidget> {
                         ElevatedButton(
                           onPressed: () async {
                             // Your action for camera start
+                            // ask user permission to acces camera
+                            // if permission granted then start camera  else show error
+                            // open camera and diplay feed on screen
+                            // start taking frames, one in every 5 second. Display it in a small window(a snip of each frame), then convert to byte stream and include it to the client request
+                            // if the hardcoded prompt is not changed, make an api call to the model(gemini pro vision)
+                            //Receive output from the model after api call and display it on the output window as well as in speech form
+                            // proceed until the stop button is pressed
                           },
                           style: ElevatedButton.styleFrom(
                             primary:
