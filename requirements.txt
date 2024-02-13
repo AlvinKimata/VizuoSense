@@ -1,0 +1,6 @@
+pyttsx3
+wave
+pyaudio
+# speech_recognition
+SpeechRecognition
+gradio

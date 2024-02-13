@@ -1,9 +1,6 @@
-# Chatbot demo with multimodal input (text, image, audio, & video).
 import gradio as gr
 import os
 import time
-
-
 
 def print_like_dislike(x: gr.LikeData):
     print(x.index, x.value, x.liked)
@@ -58,5 +55,5 @@ with gr.Blocks() as demo:
 
 demo.queue()
 if __name__ == "__main__":
-    demo.launch(share = True)
+    demo.launch(share = False)
 
